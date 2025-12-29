@@ -15,6 +15,7 @@ from .schemas import (
     MappingTerminate,
 )
 
+
 def create_router(domain: SymbologyServer) -> APIRouter:
     """Create and return the API router."""
     router = APIRouter()

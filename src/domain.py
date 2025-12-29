@@ -10,6 +10,7 @@ from .exceptions import NotFoundError
 from .models import Mapping
 from .storage import MappingStorage
 
+
 class SymbologyServer:
     """Domain layer for symbology mappings."""
 

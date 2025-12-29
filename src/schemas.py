@@ -6,6 +6,7 @@ from datetime import date
 from typing import Optional
 from pydantic import BaseModel, Field
 
+
 class MappingCreate(BaseModel):
     """Request payload for creating a new mapping."""
 
@@ -29,6 +30,7 @@ class MappingTerminate(BaseModel):
 
     symbol: str
     end_date: date
+
 
 class MappingResponse(BaseModel):
     """Serialized representation of a mapping."""

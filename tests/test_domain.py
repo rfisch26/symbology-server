@@ -13,11 +13,13 @@ from datetime import date
 from src.domain import SymbologyServer
 from src.storage import MappingStorage
 
+
 def test_add_and_lookup_mapping() -> None:
     """Verify a mapping can be added and queried."""
     domain = SymbologyServer(MappingStorage())
     domain.add_mapping("AAPL", 1, date(2024, 1, 1))
     assert domain.get_identifier("AAPL", date(2024, 1, 2)) == 1
+
 
 def test_symbol_reassignment_same_date() -> None:
     """

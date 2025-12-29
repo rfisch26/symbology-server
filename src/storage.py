@@ -10,6 +10,7 @@ from typing import List, Optional
 from .exceptions import NotFoundError
 from .models import Mapping
 
+
 class MappingStorage:
     """In-memory storage for symbology mappings."""
 
@@ -20,7 +21,7 @@ class MappingStorage:
     def insert(self, mapping: Mapping) -> None:
         """Insert a mapping into storage."""
         self._mappings.append(mapping)
-        
+
     def find_range(self, begin: date, end: date) -> list[Mapping]:
         """
         Return all mappings whose active interval overlaps [begin, end).
@@ -28,13 +29,10 @@ class MappingStorage:
         return [
             m
             for m in self._mappings
-            if m.start_date < end
-            and (m.end_date is None or m.end_date > begin)
+            if m.start_date < end and (m.end_date is None or m.end_date > begin)
         ]
 
-    def find_active_by_symbol(
-        self, symbol: str, query_date: date
-    ) -> Optional[Mapping]:
+    def find_active_by_symbol(self, symbol: str, query_date: date) -> Optional[Mapping]:
         """Find active mapping by symbol."""
         for m in self._mappings:
             if (

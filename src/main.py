@@ -7,6 +7,7 @@ from .domain import SymbologyServer
 from .routes import create_router
 from .storage import MappingStorage
 
+
 def create_app() -> FastAPI:
     """
     Application factory.
@@ -18,5 +19,6 @@ def create_app() -> FastAPI:
     app = FastAPI(title="Symbology Server v2")
     app.include_router(create_router(domain))
     return app
+
 
 app = create_app()

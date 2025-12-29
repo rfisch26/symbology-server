@@ -11,6 +11,7 @@ from datetime import date
 from src.models import Mapping
 from src.storage import MappingStorage
 
+
 def test_range_query_returns_overlapping_mappings() -> None:
     """Verify overlapping mappings are returned."""
     storage = MappingStorage()
