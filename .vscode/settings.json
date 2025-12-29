@@ -1,0 +1,4 @@
+{
+  "python.defaultInterpreterPath": "/Users/rachelfischmar/symbology-server/symbology-server/.venv/bin/python",
+  "python.analysis.extraPaths": ["./src"]
+}
