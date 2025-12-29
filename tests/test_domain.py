@@ -10,9 +10,7 @@ The domain layer is tested in isolation from HTTP and storage concerns.
 """
 
 from datetime import date
-import pytest
 from src.domain import SymbologyServer
-from src.exceptions import ConflictError
 from src.storage import MappingStorage
 
 def test_add_and_lookup_mapping() -> None:
