@@ -12,6 +12,8 @@ The domain layer is tested in isolation from HTTP and storage concerns.
 from datetime import date
 from src.domain import SymbologyServer
 from src.storage import MappingStorage
+import pytest
+from src.exceptions import ConflictError
 
 
 def test_add_and_lookup_mapping() -> None:
@@ -21,12 +23,8 @@ def test_add_and_lookup_mapping() -> None:
     assert domain.get_identifier("AAPL", date(2024, 1, 2)) == 1
 
 
-def test_symbol_reassignment_same_date() -> None:
-    """
-    Verify that reassigning a symbol on the same date
-    automatically terminates the existing mapping.
-    """
+def test_symbol_reassignment_same_date():
     domain = SymbologyServer(MappingStorage())
     domain.add_mapping("AAPL", 1, date(2024, 1, 1))
-    domain.add_mapping("AAPL", 2, date(2024, 1, 1))
-    assert domain.get_identifier("AAPL", date(2024, 1, 1)) == 2
+    with pytest.raises(ConflictError):
+        domain.add_mapping("AAPL", 2, date(2024, 1, 1))
