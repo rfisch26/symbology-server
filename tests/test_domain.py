@@ -35,3 +35,24 @@ def test_termination_and_notfound():
     domain.terminate_mapping("AAPL", date(2024, 1, 5))
     with pytest.raises(NotFoundError):
         domain.get_identifier("AAPL", date(2024, 1, 6))
+
+
+def test_must_terminate_before_reassigning():
+    domain = SymbologyServer(MappingStorage())
+    domain.add_mapping("AAPL", 1, date(2024, 1, 1))
+
+    with pytest.raises(ConflictError):
+        domain.add_mapping("AAPL", 2, date(2024, 1, 5))
+
+    domain.terminate_mapping("AAPL", date(2024, 1, 5))
+    domain.add_mapping("AAPL", 2, date(2024, 1, 5))
+
+    assert domain.get_identifier("AAPL", date(2024, 1, 6)) == 2
+
+
+def test_conflict_on_same_identifier():
+    domain = SymbologyServer(MappingStorage())
+    domain.add_mapping("AAPL", 1, date(2024, 1, 1))
+
+    with pytest.raises(ConflictError):
+        domain.add_mapping("MSFT", 1, date(2024, 1, 2))

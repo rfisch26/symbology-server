@@ -39,7 +39,7 @@ class MappingStorage:
             if (
                 m.symbol == symbol
                 and m.start_date <= on
-                and (m.end_date is None or m.end_date >= on)
+                and (m.end_date is None or m.end_date > on)
             ):
                 return m
         return None
@@ -50,7 +50,7 @@ class MappingStorage:
             if (
                 m.identifier == identifier
                 and m.start_date <= on
-                and (m.end_date is None or m.end_date >= on)
+                and (m.end_date is None or m.end_date > on)
             ):
                 return m
         return None

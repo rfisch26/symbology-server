@@ -3,16 +3,18 @@
 A Python FastAPI Symbology Server that maintains persistent mappings between human-readable symbols (e.g. `NVDA`) and numeric identifiers via an HTTP API for querying/updating symbol and identifier mappings over time.
 
 ## Features
-- HTTP API to register, terminate, and query symbology mappings
+- HTTP API to:
+  - Add a symbology mapping
+  - Terminate an active mapping
+  - Query identifier for a symbol on a given date
+  - Query symbol for an identifier on a given date
+  - Retrieve all mappings overlapping a date range `[begin, end)`
 - Enforces the following domain constraints:
   - One identifier per symbol per date
   - One symbol per identifier per date
   - Persistent mappings until explicit termination
-- Retrieve:
-  - Identifier for a symbol on a specified date
-  - Symbol for an identifier on a specified date
-  - All mappings overlapping a specific half-open date range `[begin, end)`
-- In-memory `MappingStorage` by default
+- **Important**: A mapping must be explicitly terminated before the same symbol or identifier can be reassigned.
+- In-memory `MappingStorage` backend for clarity
 - Fully automated test suite using `pytest`
 
 ## Requirements
@@ -20,10 +22,8 @@ A Python FastAPI Symbology Server that maintains persistent mappings between hum
 - Dependencies listed in `requirements.txt` and `pyproject.toml`
 
 ## Design Notes
-- **Temporal Semantics**: A symbol’s assignment to an identifier is **persistent**. A mapping becomes active
-on its `start_date` and remains active until it is explicitly terminated. All dates are ISO-8601 (`YYYY-MM-DD`) and independent of wall-clock time.
-- **Reassignment Behavior**: If a symbol is reassigned to a new identifier, the previously active mapping is
-then terminated at the new mapping’s start date. Each symbol and identifier can only appear in one active mapping at a time.
+- **Temporal Semantics**: A symbol’s assignment to an identifier is **persistent**. A mapping becomes active on its `start_date` and remains active until it is explicitly terminated. Each mapping is active over a half-open interval, so if `end_date` is omitted, the mapping is open-ended. All dates are ISO-8601 (`YYYY-MM-DD`) and independent of wall-clock time.
+- **Reassignment Behavior**: If a symbol is reassigned to a new identifier, the previously active mapping is then terminated at the new mapping’s start date. Each symbol and identifier can only appear in one active mapping at a time.
 - **Conflict Handling**: Violations of the following invariants raise explicit domain-level exceptions (surfaced as HTTP errors):
   - A symbol may have only one active identifier on a given date
   - An identifier may be assigned to only one symbol on a given date
@@ -54,6 +54,11 @@ uvicorn src.main:app --reload --port 8000
 
 pytest tests/
 
+Tests cover:
+  - Domain layer: temporal invariants, reassignment rules, conflict handling
+  - Storage layer: range queries, overlap detection
+  - HTTP API layer: end-to-end request/response validation
+
 ## Example API Usage
 
 ### Add a mapping
@@ -62,10 +67,23 @@ curl -X POST http://localhost:8000/mapping \
   -H "Content-Type: application/json" \
   -d '{"symbol":"AAPL","identifier":1,"start_date":"2024-01-01"}'
 
+### Expected response:
+
+{
+  "status": "ok",
+  "symbol": "AAPL",
+  "identifier": 1,
+  "start_date": "2024-01-01"
+}
+
 
 ### Query identifier for a symbol
 
 curl "http://localhost:8000/symbol/AAPL?date=2024-01-02"
+
+### Expected response:
+
+1
 
 
 ### Terminate a mapping
@@ -74,10 +92,50 @@ curl -X POST http://localhost:8000/mapping/terminate \
   -H "Content-Type: application/json" \
   -d '{"symbol":"AAPL","end_date":"2024-01-05"}'
 
+### Expected response:
+
+{
+  "status": "terminated",
+  "symbol": "AAPL",
+  "end_date": "2024-01-05"
+}
+
+
+### Reassign after termination
+
+curl -X POST http://localhost:8000/mapping \
+  -H "Content-Type: application/json" \
+  -d '{"symbol":"AAPL","identifier":2,"start_date":"2024-01-05"}'
+
+### Expected response:
+
+{
+  "status": "ok",
+  "symbol": "AAPL",
+  "identifier": 2,
+  "start_date": "2024-01-05"
+}
+
 
 ### Query mappings in a date range
 
 curl "http://localhost:8000/mappings?begin=2024-01-01&end=2024-01-10"
+
+### Expected response:
+[
+  {
+    "symbol": "AAPL",
+    "identifier": 1,
+    "start_date": "2024-01-01",
+    "end_date": "2024-01-05"
+  },
+  {
+    "symbol": "AAPL",
+    "identifier": 2,
+    "start_date": "2024-01-05",
+    "end_date": null
+  }
+]
 
 ## Notes
 
