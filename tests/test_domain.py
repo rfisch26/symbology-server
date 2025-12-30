@@ -44,7 +44,6 @@ def test_termination_and_notfound(fresh_domain):
         domain.lookup("AAPL", date(2024, 1, 2))
 
 
-
 def test_must_terminate_before_reassigning(fresh_domain):
     domain = fresh_domain
     domain.add_mapping("AAPL", 1, date(2024, 1, 1))
