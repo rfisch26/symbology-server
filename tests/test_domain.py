@@ -40,8 +40,9 @@ def test_termination_and_notfound(fresh_domain):
     domain = fresh_domain
     domain.add_mapping("AAPL", 1, date(2024, 1, 1))
     domain.terminate_mapping("AAPL", date(2024, 1, 2))
-    result = domain.lookup("AAPL", date(2024, 1, 2))
-    assert result is None
+    with pytest.raises(NotFoundError):
+        domain.lookup("AAPL", date(2024, 1, 2))
+
 
 
 def test_must_terminate_before_reassigning(fresh_domain):
