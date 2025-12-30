@@ -5,7 +5,6 @@ This layer enforces all symbology server rules and invariants.
 """
 
 from datetime import date
-from typing import Optional
 from src.storage import MappingStorage
 from src.exceptions import ConflictError, NotFoundError
 
