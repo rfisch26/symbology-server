@@ -3,21 +3,17 @@ Application entry point for the Symbology Server.
 """
 
 from fastapi import FastAPI
+from .storage import MappingStorage
 from .domain import SymbologyServer
 from .routes import create_router
-from .storage import MappingStorage
 
 
-def create_app() -> FastAPI:
-    """
-    Application factory.
-
-    This makes the app easy to test and avoids global state.
-    """
-    storage = MappingStorage()
+def create_app(storage: MappingStorage | None = None) -> FastAPI:
+    if storage is None:
+        storage = MappingStorage()
+    app = FastAPI()
     domain = SymbologyServer(storage)
-    app = FastAPI(title="Symbology Server")
-    app.include_router(create_router(domain))
+    create_router(app, domain)
     return app
 
 

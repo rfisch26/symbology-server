@@ -10,20 +10,28 @@ No domain-level validation is performed here, and all symbology invariants are e
 """
 
 from fastapi.testclient import TestClient
+from datetime import date
 from src.main import create_app
+from src.storage import MappingStorage
 
 
-def test_end_to_end_http_flow() -> None:
-    """Verify basic HTTP interaction."""
-    client = TestClient(create_app())
+def test_end_to_end_http_flow():
+    storage = MappingStorage()
+    app = create_app(storage)
+    client = TestClient(app)
     response = client.post(
         "/mapping",
-        json={
-            "symbol": "MSFT",
-            "identifier": 10,
-            "start_date": "2024-01-01",
-        },
+        json={"symbol": "MSFT", "identifier": 10, "start_date": "2024-01-01"},
     )
     assert response.status_code == 200
-    response = client.get("/symbol/MSFT", params={"date": "2024-01-02"})
-    assert response.json() == 10
+    data = response.json()
+    assert data["symbol"] == "MSFT"
+    assert data["identifier"] == 10
+    assert data["start_date"] == "2024-01-01"
+    response = client.post(
+        "/mapping/terminate",
+        json={"symbol": "MSFT", "end_date": "2024-01-02"},
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "terminated"

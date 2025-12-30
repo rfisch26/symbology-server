@@ -14,7 +14,7 @@ A Python FastAPI Symbology Server that maintains persistent mappings between hum
   - One symbol per identifier per date
   - Persistent mappings until explicit termination
 - **Important**: A mapping must be explicitly terminated before the same symbol or identifier can be reassigned.
-- In-memory `MappingStorage` backend for clarity
+- In-memory `MappingStorage` backend by default; optional **persistent storage** supported
 - Fully automated test suite using `pytest`
 
 ## Requirements
@@ -33,6 +33,8 @@ A Python FastAPI Symbology Server that maintains persistent mappings between hum
   - Concurrency control
   - Timezone normalization
 - **Determinism**: All query results are deterministic functions of input dates and stored mappings.
+- **Persistent Storage (Optional Stretch Goal)**: The server can save its state to disk and reload it on restart. By default, storage is in-memory, but persistent storage allows mappings to survive application restarts. Persistence uses JSON file serialization.
+
 
 ## Setup
 
@@ -44,9 +46,11 @@ pip install -r requirements.txt
 
 ## Running the Server
 
+### Example (if applicable):
 ```bash
 uvicorn src.main:app --reload --port 8000
 ```
+### Persistent storage is enabled by default if JSON file exists
 
 - The API will be available at http://localhost:8000.
 
@@ -142,3 +146,4 @@ curl "http://localhost:8000/mappings?begin=2024-01-01&end=2024-01-10"
 - Dependencies are defined in pyproject.toml.
 - requirements.txt is provided for convenience.
 - Focus is on clarity and correctness of symbology semantics rather than production-scale performance.
+- **Stretch Goal (Persistent State)**: Persistent storage is implemented as a stretch goal. Mappings are saved and reloaded from disk, maintaining state across restarts.
