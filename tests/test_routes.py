@@ -10,7 +10,6 @@ No domain-level validation is performed here, and all symbology invariants are e
 """
 
 from fastapi.testclient import TestClient
-from datetime import date
 from src.main import create_app
 from src.storage import MappingStorage
 
