@@ -19,7 +19,7 @@ class MappingStorage:
 
     def all(self) -> List[Mapping]:
         return list(self._mappings)
-    
+
     def find_range(self, begin: date, end: date) -> List[Mapping]:
         """Return overlapping mappings [begin, end)."""
         results = []
