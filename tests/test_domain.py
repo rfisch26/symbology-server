@@ -10,21 +10,26 @@ The domain layer is tested in isolation from HTTP and storage concerns.
 """
 
 from datetime import date
+import pytest
 from src.domain import SymbologyServer
 from src.storage import MappingStorage
-import pytest
-from src.exceptions import ConflictError
+from src.exceptions import ConflictError, NotFoundError
 
 
-def test_add_and_lookup_mapping() -> None:
-    """Verify a mapping can be added and queried."""
+def test_add_and_lookup_mapping():
     domain = SymbologyServer(MappingStorage())
     domain.add_mapping("AAPL", 1, date(2024, 1, 1))
     assert domain.get_identifier("AAPL", date(2024, 1, 2)) == 1
 
-
-def test_symbol_reassignment_same_date():
+def test_conflict_on_same_symbol():
     domain = SymbologyServer(MappingStorage())
     domain.add_mapping("AAPL", 1, date(2024, 1, 1))
     with pytest.raises(ConflictError):
         domain.add_mapping("AAPL", 2, date(2024, 1, 1))
+
+def test_termination_and_notfound():
+    domain = SymbologyServer(MappingStorage())
+    domain.add_mapping("AAPL", 1, date(2024, 1, 1))
+    domain.terminate_mapping("AAPL", date(2024, 1, 5))
+    with pytest.raises(NotFoundError):
+        domain.get_identifier("AAPL", date(2024, 1, 6))

@@ -12,6 +12,8 @@ from .storage import MappingStorage
 
 
 class SymbologyServer:
+    """Domain layer for symbology server."""
+    
     def __init__(self, storage: MappingStorage) -> None:
         self.storage = storage
 
@@ -44,6 +46,7 @@ class SymbologyServer:
         )
 
     def terminate_mapping(self, symbol: str, end_date: date) -> None:
+        """Terminate an active mapping for the given symbol on end_date."""
         try:
             self.storage.terminate(symbol, end_date)
         except KeyError:
@@ -52,16 +55,19 @@ class SymbologyServer:
             )
 
     def get_identifier(self, symbol: str, on: date) -> int:
+        """Get the identifier for a symbol on a given date."""
         m = self.storage.find_active_by_symbol(symbol, on)
         if not m:
             raise NotFoundError(f"No mapping for symbol '{symbol}' on {on}")
         return m.identifier
 
     def get_symbol(self, identifier: int, on: date) -> str:
+        """Get the symbol for an identifier on a given date."""
         m = self.storage.find_active_by_identifier(identifier, on)
         if not m:
             raise NotFoundError(f"No mapping for identifier '{identifier}' on {on}")
         return m.symbol
 
     def get_mappings_between(self, begin: date, end: date) -> List[Mapping]:
+        """Get all mappings overlapping the given date range [begin, end)."""
         return self.storage.find_range(begin, end)

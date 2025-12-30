@@ -11,13 +11,17 @@ from .models import Mapping
 
 
 class MappingStorage:
+    """In-memory storage backend for symbology mappings."""
+    
     def __init__(self) -> None:
         self._mappings: List[Mapping] = []
 
     def insert(self, mapping: Mapping) -> None:
+        """Insert a new mapping."""
         self._mappings.append(mapping)
 
     def all(self) -> List[Mapping]:
+        """Return all mappings."""
         return list(self._mappings)
 
     def find_range(self, begin: date, end: date) -> List[Mapping]:
@@ -30,6 +34,7 @@ class MappingStorage:
         return results
 
     def find_active_by_symbol(self, symbol: str, on: date) -> Optional[Mapping]:
+        """Find active mapping for symbol on given date."""
         for m in self._mappings:
             if (
                 m.symbol == symbol
@@ -40,6 +45,7 @@ class MappingStorage:
         return None
 
     def find_active_by_identifier(self, identifier: int, on: date) -> Optional[Mapping]:
+        """Find active mapping for identifier on given date."""
         for m in self._mappings:
             if (
                 m.identifier == identifier
@@ -50,6 +56,7 @@ class MappingStorage:
         return None
 
     def terminate(self, symbol: str, end_date: date) -> None:
+        """Terminate active mapping for symbol on given date."""
         m = self.find_active_by_symbol(symbol, end_date)
         if not m:
             raise KeyError
