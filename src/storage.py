@@ -12,7 +12,7 @@ from .models import Mapping
 
 class MappingStorage:
     """In-memory storage backend for symbology mappings."""
-    
+
     def __init__(self) -> None:
         self._mappings: List[Mapping] = []
 

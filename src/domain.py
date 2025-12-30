@@ -13,7 +13,7 @@ from .storage import MappingStorage
 
 class SymbologyServer:
     """Domain layer for symbology server."""
-    
+
     def __init__(self, storage: MappingStorage) -> None:
         self.storage = storage
 

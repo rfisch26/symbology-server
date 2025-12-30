@@ -21,11 +21,13 @@ def test_add_and_lookup_mapping():
     domain.add_mapping("AAPL", 1, date(2024, 1, 1))
     assert domain.get_identifier("AAPL", date(2024, 1, 2)) == 1
 
+
 def test_conflict_on_same_symbol():
     domain = SymbologyServer(MappingStorage())
     domain.add_mapping("AAPL", 1, date(2024, 1, 1))
     with pytest.raises(ConflictError):
         domain.add_mapping("AAPL", 2, date(2024, 1, 1))
+
 
 def test_termination_and_notfound():
     domain = SymbologyServer(MappingStorage())
