@@ -9,8 +9,8 @@ Tests exercise the FastAPI routes end-to-end via TestClient, verifying:
 
 from fastapi.testclient import TestClient
 
-
 # ── Add mapping ───────────────────────────────────────────────────────────────
+
 
 def test_add_mapping_returns_201(client: TestClient):
     response = client.post(
@@ -40,6 +40,7 @@ def test_add_duplicate_mapping_returns_409(client: TestClient):
 
 # ── Terminate mapping ─────────────────────────────────────────────────────────
 
+
 def test_terminate_mapping(client: TestClient):
     client.post(
         "/mapping",
@@ -65,6 +66,7 @@ def test_terminate_nonexistent_mapping_returns_404(client: TestClient):
 
 # ── Symbol lookup ─────────────────────────────────────────────────────────────
 
+
 def test_get_identifier_for_symbol(client: TestClient):
     client.post(
         "/mapping",
@@ -82,6 +84,7 @@ def test_get_identifier_for_unknown_symbol_returns_404(client: TestClient):
 
 # ── Identifier lookup ─────────────────────────────────────────────────────────
 
+
 def test_get_symbol_for_identifier(client: TestClient):
     client.post(
         "/mapping",
@@ -98,6 +101,7 @@ def test_get_symbol_for_unknown_identifier_returns_404(client: TestClient):
 
 
 # ── Date range query ──────────────────────────────────────────────────────────
+
 
 def test_get_mappings_in_range(client: TestClient):
     client.post(

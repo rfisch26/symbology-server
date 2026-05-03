@@ -44,7 +44,9 @@ class SymbologyServer:
         """
         mapping = self.storage.find_active_by_symbol(symbol, end_date)
         if not mapping:
-            raise NotFoundError(f"No active mapping found for symbol '{symbol}' on {end_date}.")
+            raise NotFoundError(
+                f"No active mapping found for symbol '{symbol}' on {end_date}."
+            )
         mapping.end_date = end_date
         self.storage.save()
 

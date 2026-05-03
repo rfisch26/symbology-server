@@ -13,8 +13,8 @@ from datetime import date
 from src.storage import MappingStorage
 from src.models import Mapping
 
-
 # ── Insertion and retrieval ───────────────────────────────────────────────────
+
 
 def test_insert_and_find_active(storage: MappingStorage):
     storage.insert("AAPL", 1, date(2024, 1, 1))
@@ -42,6 +42,7 @@ def test_find_active_one_day_before_end_date(storage: MappingStorage):
 
 # ── Range queries ─────────────────────────────────────────────────────────────
 
+
 def test_range_query_returns_overlapping_mappings(storage: MappingStorage):
     storage._mappings.append(Mapping("A", 1, date(2024, 1, 1), date(2024, 1, 3)))
     storage._mappings.append(Mapping("B", 2, date(2024, 1, 3), date(2024, 1, 5)))
@@ -65,6 +66,7 @@ def test_open_ended_mapping_included_in_range(storage: MappingStorage):
 
 
 # ── Persistence ───────────────────────────────────────────────────────────────
+
 
 def test_persistence_round_trip(tmp_path):
     """Dates must survive a save/load cycle as date objects, not strings."""

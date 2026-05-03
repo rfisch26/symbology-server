@@ -43,5 +43,6 @@ def test_termination_survives_restart(tmp_path):
     # Should be inactive on end_date (half-open interval)
     from src.exceptions import NotFoundError
     import pytest
+
     with pytest.raises(NotFoundError):
         domain2.lookup("AAPL", date(2024, 1, 10))

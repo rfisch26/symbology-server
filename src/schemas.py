@@ -8,8 +8,8 @@ from datetime import date
 from typing import Optional
 from pydantic import BaseModel
 
-
 # ── Request schemas ───────────────────────────────────────────────────────────
+
 
 class MappingCreate(BaseModel):
     symbol: str
@@ -23,6 +23,7 @@ class MappingTerminate(BaseModel):
 
 
 # ── Response schemas ──────────────────────────────────────────────────────────
+
 
 class MappingCreated(BaseModel):
     status: str = "ok"

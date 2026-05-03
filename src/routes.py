@@ -9,7 +9,13 @@ from datetime import date as DateType
 from fastapi import APIRouter, HTTPException, Query
 from src.domain import SymbologyServer
 from src.exceptions import ConflictError, NotFoundError
-from src.schemas import MappingCreate, MappingTerminate, MappingResponse, MappingCreated, MappingTerminated
+from src.schemas import (
+    MappingCreate,
+    MappingTerminate,
+    MappingResponse,
+    MappingCreated,
+    MappingTerminated,
+)
 
 
 def create_router(domain: SymbologyServer) -> APIRouter:
@@ -36,14 +42,20 @@ def create_router(domain: SymbologyServer) -> APIRouter:
         return MappingTerminated(symbol=request.symbol, end_date=request.end_date)
 
     @router.get("/symbol/{symbol}", response_model=int)
-    def get_identifier(symbol: str, date: DateType = Query(..., description="ISO date, e.g. 2024-01-15")) -> int:
+    def get_identifier(
+        symbol: str,
+        date: DateType = Query(..., description="ISO date, e.g. 2024-01-15"),
+    ) -> int:
         try:
             return domain.get_identifier(symbol, date)
         except NotFoundError as exc:
             raise HTTPException(status_code=404, detail=str(exc))
 
     @router.get("/identifier/{identifier}", response_model=str)
-    def get_symbol(identifier: int, date: DateType = Query(..., description="ISO date, e.g. 2024-01-15")) -> str:
+    def get_symbol(
+        identifier: int,
+        date: DateType = Query(..., description="ISO date, e.g. 2024-01-15"),
+    ) -> str:
         try:
             return domain.get_symbol(identifier, date)
         except NotFoundError as exc:

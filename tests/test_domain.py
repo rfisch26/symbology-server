@@ -17,8 +17,8 @@ from datetime import date
 from src.domain import SymbologyServer
 from src.exceptions import ConflictError, NotFoundError
 
-
 # ── Basic add and lookup ──────────────────────────────────────────────────────
+
 
 def test_add_and_lookup_mapping(domain: SymbologyServer):
     domain.add_mapping("AAPL", 1, date(2024, 1, 1))
@@ -41,6 +41,7 @@ def test_lookup_before_start_date_raises(domain: SymbologyServer):
 
 # ── Conflict detection ────────────────────────────────────────────────────────
 
+
 def test_conflict_on_duplicate_symbol(domain: SymbologyServer):
     domain.add_mapping("AAPL", 1, date(2024, 1, 1))
     with pytest.raises(ConflictError):
@@ -54,6 +55,7 @@ def test_conflict_on_duplicate_identifier(domain: SymbologyServer):
 
 
 # ── Termination ───────────────────────────────────────────────────────────────
+
 
 def test_termination_makes_mapping_inactive(domain: SymbologyServer):
     """A mapping terminated on end_date should not be active on end_date (half-open)."""
@@ -77,6 +79,7 @@ def test_terminate_nonexistent_mapping_raises(domain: SymbologyServer):
 
 # ── Reassignment after termination ────────────────────────────────────────────
 
+
 def test_reassign_symbol_after_termination(domain: SymbologyServer):
     domain.add_mapping("AAPL", 1, date(2024, 1, 1))
     domain.terminate_mapping("AAPL", date(2024, 1, 5))
@@ -92,6 +95,7 @@ def test_reassign_without_termination_raises(domain: SymbologyServer):
 
 # ── Reverse lookup ────────────────────────────────────────────────────────────
 
+
 def test_get_symbol_by_identifier(domain: SymbologyServer):
     domain.add_mapping("AAPL", 42, date(2024, 1, 1))
     assert domain.get_symbol(42, date(2024, 1, 2)) == "AAPL"
@@ -105,6 +109,7 @@ def test_get_symbol_after_termination_raises(domain: SymbologyServer):
 
 
 # ── Date-range queries ────────────────────────────────────────────────────────
+
 
 def test_get_mappings_between_returns_overlapping(domain: SymbologyServer):
     domain.add_mapping("AAPL", 1, date(2024, 1, 1))

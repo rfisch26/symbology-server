@@ -40,7 +40,9 @@ class MappingStorage:
                 symbol=item["symbol"],
                 identifier=item["identifier"],
                 start_date=date.fromisoformat(item["start_date"]),
-                end_date=date.fromisoformat(item["end_date"]) if item["end_date"] else None,
+                end_date=(
+                    date.fromisoformat(item["end_date"]) if item["end_date"] else None
+                ),
             )
             for item in data
         ]
@@ -51,20 +53,26 @@ class MappingStorage:
         A mapping is active on the half-open interval [start_date, end_date).
         """
         for m in self._mappings:
-            if m.symbol == symbol and m.start_date <= query_date and (
-                m.end_date is None or m.end_date > query_date
+            if (
+                m.symbol == symbol
+                and m.start_date <= query_date
+                and (m.end_date is None or m.end_date > query_date)
             ):
                 return m
         return None
 
-    def find_active_by_identifier(self, identifier: int, query_date: date) -> Mapping | None:
+    def find_active_by_identifier(
+        self, identifier: int, query_date: date
+    ) -> Mapping | None:
         """
         Return the active mapping for an identifier on a given date, or None.
         A mapping is active on the half-open interval [start_date, end_date).
         """
         for m in self._mappings:
-            if m.identifier == identifier and m.start_date <= query_date and (
-                m.end_date is None or m.end_date > query_date
+            if (
+                m.identifier == identifier
+                and m.start_date <= query_date
+                and (m.end_date is None or m.end_date > query_date)
             ):
                 return m
         return None
