@@ -7,7 +7,6 @@ Tests exercise the FastAPI routes end-to-end via TestClient, verifying:
     - Error detail propagation from the domain layer
 """
 
-from datetime import date
 from fastapi.testclient import TestClient
 
 
